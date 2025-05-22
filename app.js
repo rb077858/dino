@@ -1,12 +1,10 @@
-// 1. פרטי תצורת Firebase
-// חשוב: החלף את הערכים בפרטים שאספת משלב 1 ב-Firebase Console
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // לדוגמה: "AIzaSyC..."
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com", // לדוגמה: "my-dino-game.firebaseapp.com"
-  projectId: "YOUR_PROJECT_ID", // לדוגמה: "my-dino-game"
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAdTXiYOPgacKYcCLoifvPj1Qk9PhNFB9U",
+  authDomain: "dinochrome-ebc8e.firebaseapp.com",
+  projectId: "dinochrome-ebc8e",
+  storageBucket: "dinochrome-ebc8e.firebasestorage.app",
+  messagingSenderId: "722136091216",
+  appId: "1:722136091216:web:618651df477ea963535f55"
 };
 
 // אתחול Firebase
