@@ -8,7 +8,6 @@ const firebaseConfig = {
   messagingSenderId: "722136091216",
   appId: "1:722136091216:web:618651df477ea963535f55"
 };
-
 // אתחול Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -27,11 +26,10 @@ const highScoreOnGameOver = document.getElementById('high-score-on-gameover');
 
 // הפניות לאלמנטים מה-HTML של Firebase Auth/Scores
 const userDisplay = document.getElementById('user-display');
-const authButtonsDiv = document.getElementById('auth-buttons'); // div המכיל את כפתורי גוגל/מייל
-// const googleSignInBtn = document.getElementById('google-signin-btn'); // הוסר, אין צורך בקישור לכפתור שלא קיים
-const showEmailSigninBtn = document.getElementById('show-email-signin-btn'); // כפתור להצגת טופס המייל/סיסמה
+const authButtonsDiv = document.getElementById('auth-buttons'); // div המכיל את כפתורי הכניסה
+const showEmailSigninBtn = document.getElementById('show-email-signin-btn');
 const signOutBtn = document.getElementById('signout-btn');
-const highScoreDisplay = document.getElementById('high-score-display'); // תצוגת ציון גבוה כללי
+const highScoreDisplay = document.getElementById('high-score-display');
 
 // אלמנטים חדשים לטופס מייל/סיסמה
 const emailAuthSection = document.getElementById('email-auth-section');
@@ -39,7 +37,7 @@ const emailInput = document.getElementById('email-input');
 const passwordInput = document.getElementById('password-input');
 const emailSignInBtn = document.getElementById('email-signin-btn');
 const emailSignUpBtn = document.getElementById('email-signup-btn');
-const toggleAuthModeBtn = document.getElementById('toggle-auth-mode'); // כפתור לחזור לכפתורי התחברות
+const toggleAuthModeBtn = document.getElementById('toggle-auth-mode');
 
 // משתנים גלובליים למשחק
 let isJumping = false;
@@ -49,9 +47,9 @@ let cactusLeft = 600;
 let score = 0;
 let gameInterval;
 let jumpInterval;
-let personalHighScore = 0; // ציון גבוה אישי של המשתמש
+let personalHighScore = 0;
 
-// 2. פונקציית קפיצה (ללא שינוי מהותי)
+// 2. פונקציית קפיצה
 function jump() {
   if (isJumping) return;
   isJumping = true;
@@ -74,7 +72,7 @@ function jump() {
   }, 20);
 }
 
-// 3. פונקציית התחלת המשחק (עם שינויים קלים לשילוב Firebase)
+// 3. פונקציית התחלת המשחק
 function startGame() {
   cactusLeft = 600;
   cactus.style.left = cactusLeft + 'px';
@@ -122,19 +120,7 @@ function startGame() {
   }, 20);
 }
 
-// 4. פונקציית כניסה עם גוגל - **הוסרה**
-// async function signInWithGoogle() {
-//     const provider = new firebase.auth.GoogleAuthProvider();
-//     try {
-//         await auth.signInWithPopup(provider);
-//         console.log("התחברת בהצלחה עם גוגל!");
-//     } catch (error) {
-//         console.error("שגיאה בהתחברות עם גוגל:", error.message);
-//         alert("שגיאה בהתחברות: " + error.message);
-//     }
-// }
-
-// 5. פונקציית התנתקות (ללא שינוי)
+// 4. פונקציית התנתקות
 async function signOutUser() {
     try {
         await auth.signOut();
@@ -145,7 +131,7 @@ async function signOutUser() {
     }
 }
 
-// 6. פונקציה לשמירה או עדכון של ציון גבוה (ללא שינוי)
+// 5. פונקציה לשמירה או עדכון של ציון גבוה
 async function saveHighScore(currentScore) {
     const user = auth.currentUser;
     if (user) {
@@ -179,7 +165,7 @@ async function saveHighScore(currentScore) {
     }
 }
 
-// 7. פונקציה לקריאת והצגת הציון הגבוה של המשתמש (ללא שינוי)
+// 6. פונקציה לקריאת והצגת הציון הגבוה של המשתמש
 async function fetchAndDisplayHighScore() {
     const user = auth.currentUser;
     if (user) {
@@ -203,7 +189,7 @@ async function fetchAndDisplayHighScore() {
     }
 }
 
-// 8. פונקציית רישום משתמש חדש עם מייל וסיסמה (ללא שינוי)
+// 7. פונקציית רישום משתמש חדש עם מייל וסיסמה
 async function signUpWithEmailPassword() {
     const email = emailInput.value;
     const password = passwordInput.value;
@@ -230,7 +216,7 @@ async function signUpWithEmailPassword() {
     }
 }
 
-// 9. פונקציית כניסה עם מייל וסיסמה (ללא שינוי)
+// 8. פונקציית כניסה עם מייל וסיסמה
 async function signInWithEmailPassword() {
     const email = emailInput.value;
     const password = passwordInput.value;
@@ -255,35 +241,41 @@ async function signInWithEmailPassword() {
     }
 }
 
-// 10. פונקציה לניהול תצוגת טפסי האימות (ללא שינוי)
+// 9. פונקציה לניהול תצוגת טפסי האימות
 function toggleAuthForms(showEmailForm) {
-    if (showEmailForm) {
-        authButtonsDiv.style.display = 'none';
-        emailAuthSection.style.display = 'block';
-    } else {
-        authButtonsDiv.style.display = 'block';
-        emailAuthSection.style.display = 'none';
+    // בודקים אם האלמנטים קיימים לפני שמנסים לגשת אליהם
+    if (authButtonsDiv) {
+        authButtonsDiv.style.display = showEmailForm ? 'none' : 'block';
+    }
+    if (emailAuthSection) {
+        emailAuthSection.style.display = showEmailForm ? 'block' : 'none';
     }
 }
 
-// 11. האזנה לשינויים במצב ההתחברות (auth.onAuthStateChanged) (ללא שינוי מהותי)
+// 10. האזנה לשינויים במצב ההתחברות
 auth.onAuthStateChanged(user => {
     if (user) {
+        // המשתמש מחובר
         userDisplay.textContent = `מחובר כ: ${user.displayName || user.email}`;
-        authButtonsDiv.style.display = 'none';
-        emailAuthSection.style.display = 'none';
-        signOutBtn.style.display = 'inline-block';
+        // ודא שהאלמנטים קיימים לפני הסתרה/הצגה
+        if (authButtonsDiv) authButtonsDiv.style.display = 'none';
+        if (emailAuthSection) emailAuthSection.style.display = 'none';
+        if (signOutBtn) signOutBtn.style.display = 'inline-block';
         fetchAndDisplayHighScore();
     } else {
+        // המשתמש לא מחובר
         userDisplay.textContent = "לא מחובר";
-        signOutBtn.style.display = 'none';
+        if (signOutBtn) signOutBtn.style.display = 'none';
+        
+        // הצג את כפתורי הכניסה הכלליים כברירת מחדל
         toggleAuthForms(false); 
+        
         highScoreDisplay.textContent = 'ציון גבוה אישי: --';
         personalHighScore = 0;
     }
 });
 
-// 12. הגדרת מאזיני אירועים לכפתורים ולמקשים
+// 11. הגדרת מאזיני אירועים לכפתורים ולמקשים
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' || e.code === 'ArrowUp') {
     if (gameOverScreen.style.display === 'none') {
@@ -296,13 +288,13 @@ restartBtn.addEventListener('click', () => {
   startGame();
 });
 
-// googleSignInBtn.addEventListener('click', signInWithGoogle); // הוסר, אין צורך במאזין לכפתור שלא קיים
 signOutBtn.addEventListener('click', signOutUser);
 
-// מאזינים חדשים לכפתורי המייל/סיסמה (ללא שינוי)
+// מאזינים חדשים לכפתורי המייל/סיסמה
 showEmailSigninBtn.addEventListener('click', () => toggleAuthForms(true));
 emailSignInBtn.addEventListener('click', signInWithEmailPassword);
 emailSignUpBtn.addEventListener('click', signUpWithEmailPassword);
 toggleAuthModeBtn.addEventListener('click', () => toggleAuthForms(false));
 
+// התחל את המשחק באופן אוטומטי בטעינת הדף (רק אם הוא לא במצב Game Over)
 startGame();
