@@ -73,7 +73,7 @@
       flex-direction: column;
       text-align: center;
     }
-    #gameOver button, #auth-buttons button {
+    #gameOver button, .auth-section button { /* עדכון לסלקטור הכפתורים */
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 18px;
@@ -112,6 +112,45 @@
       margin-bottom: 5px;
       color: #0056b3;
     }
+    .auth-section {
+        background-color: #e9ecef;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px auto;
+        max-width: 400px;
+        text-align: center;
+        display: none; /* נסתר כברירת מחדל */
+    }
+    .auth-section input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: right; /* יישור טקסט בתוך שדות קלט לימין */
+    }
+    .auth-section button {
+        width: 100%;
+        margin-top: 10px;
+    }
+    #show-email-signin-btn, #show-email-signup-btn {
+        background-color: #28a745;
+        color: white;
+        margin-bottom: 10px;
+    }
+    #show-email-signin-btn:hover, #show-email-signup-btn:hover {
+        background-color: #218838;
+    }
+    #toggle-auth-mode {
+        background-color: #17a2b8;
+        color: white;
+        font-size: 0.9em;
+        padding: 8px 15px;
+        margin-top: 15px;
+    }
+    #toggle-auth-mode:hover {
+        background-color: #138496;
+    }
   </style>
 </head>
 <body>
@@ -119,9 +158,19 @@
     <p id="user-display">לא מחובר</p>
     <div id="auth-buttons">
       <button id="google-signin-btn">התחבר עם גוגל</button>
+      <button id="show-email-signin-btn">התחבר עם מייל וסיסמה</button>
       <button id="signout-btn" style="display:none;">התנתק</button>
     </div>
   </div>
+
+  <div id="email-auth-section" class="auth-section">
+      <h3>התחבר / הירשם</h3>
+      <input type="email" id="email-input" placeholder="מייל" required>
+      <input type="password" id="password-input" placeholder="סיסמה" required>
+      <button id="email-signin-btn">התחבר</button>
+      <button id="email-signup-btn">הירשם</button>
+      <button id="toggle-auth-mode">חזור לכפתורי התחברות</button>
+  </div>
 
   <div id="game">
     <div id="dino"></div>
