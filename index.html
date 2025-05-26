@@ -69,7 +69,7 @@
       align-items: center;
       font-size: 32px;
       color: red;
-      display: none;
+      display: none; /* חייב להיות hidden כברירת מחדל */
       flex-direction: column;
       text-align: center;
     }
@@ -88,13 +88,6 @@
     }
     #restartBtn:hover {
       background-color: #0056b3;
-    }
-    #google-signin-btn { /* ניתן להשאיר את ה-CSS הזה, אבל הכפתור עצמו יוסר */
-      background-color: #db4437; /* צבע כפתור גוגל */
-      color: white;
-    }
-    #google-signin-btn:hover {
-      background-color: #c0392b;
     }
     #signout-btn {
       background-color: #6c757d; /* צבע כפתור התנתקות */
@@ -133,13 +126,20 @@
         width: 100%;
         margin-top: 10px;
     }
-    #show-email-signin-btn, #show-email-signup-btn {
+    #show-email-signin-btn {
         background-color: #28a745;
         color: white;
         margin-bottom: 10px;
     }
-    #show-email-signin-btn:hover, #show-email-signup-btn:hover {
+    #show-email-signin-btn:hover {
         background-color: #218838;
+    }
+    #email-signin-btn, #email-signup-btn {
+        background-color: #007bff;
+        color: white;
+    }
+    #email-signin-btn:hover, #email-signup-btn:hover {
+        background-color: #0056b3;
     }
     #toggle-auth-mode {
         background-color: #17a2b8;
@@ -157,7 +157,7 @@
     <div id="user-status">
     <p id="user-display">לא מחובר</p>
     <div id="auth-buttons">
-      <button id="show-email-signin-btn">התחבר עם מייל וסיסמה</button>
+      <button id="show-email-signin-btn">התחבר / הירשם עם מייל וסיסמה</button>
       <button id="signout-btn" style="display:none;">התנתק</button>
     </div>
   </div>
@@ -168,7 +168,7 @@
       <input type="password" id="password-input" placeholder="סיסמה" required>
       <button id="email-signin-btn">התחבר</button>
       <button id="email-signup-btn">הירשם</button>
-      <button id="toggle-auth-mode">חזור לכפתורי התחברות</button>
+      <button id="toggle-auth-mode">חזור למצב כפתורי התחברות</button>
   </div>
 
   <div id="game">
