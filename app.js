@@ -8,6 +8,7 @@ const firebaseConfig = {
   messagingSenderId: "722136091216",
   appId: "1:722136091216:web:618651df477ea963535f55"
 };
+
 // אתחול Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -26,7 +27,7 @@ const highScoreOnGameOver = document.getElementById('high-score-on-gameover');
 
 // הפניות לאלמנטים מה-HTML של Firebase Auth/Scores
 const userDisplay = document.getElementById('user-display');
-const authButtonsDiv = document.getElementById('auth-buttons'); // div המכיל את כפתורי הכניסה
+const authButtonsDiv = document.getElementById('auth-buttons');
 const showEmailSigninBtn = document.getElementById('show-email-signin-btn');
 const signOutBtn = document.getElementById('signout-btn');
 const highScoreDisplay = document.getElementById('high-score-display');
@@ -74,17 +75,24 @@ function jump() {
 
 // 3. פונקציית התחלת המשחק
 function startGame() {
+  // לוודא שהאלמנטים הגרפיים של המשחק קיימים לפני שמתחילים להפעיל עליהם פעולות
+  if (!dino || !cactus || !currentScoreEl || !gameOverScreen) {
+    console.error("שגיאה: אחד מאלמנטי המשחק הראשיים (dino, cactus, game, gameOver) חסר ב-HTML או שה-ID שלו שגוי. ודא ששמות ה-ID תואמים לקוד ה-HTML.");
+    // ייתכן שנרצה להציג הודעה למשתמש או לעצור את המשחק בצורה אלגנטית
+    return;
+  }
+
   cactusLeft = 600;
   cactus.style.left = cactusLeft + 'px';
   score = 0;
   currentScoreEl.textContent = 'ציון נוכחי: ' + score;
-  gameOverScreen.style.display = 'none';
+  gameOverScreen.style.display = 'none'; // ודא שמסך הסיום מוסתר בתחילת משחק
 
   isJumping = false;
   jumpHeight = 0;
   dino.style.bottom = '0px';
 
-  clearInterval(gameInterval);
+  clearInterval(gameInterval); // נקה כל אינטרוול משחק קודם אם קיים
 
   gameInterval = setInterval(() => {
     cactusLeft -= cactusSpeed;
@@ -93,31 +101,34 @@ function startGame() {
     const dinoRect = dino.getBoundingClientRect();
     const cactusRect = cactus.getBoundingClientRect();
 
+    // בדיקת התנגשות
     if (
       cactusRect.left < dinoRect.right &&
       cactusRect.right > dinoRect.left &&
       cactusRect.top < dinoRect.bottom &&
       cactusRect.bottom > dinoRect.top &&
-      jumpHeight < 40
+      jumpHeight < 40 // הדינו "על הקרקע" (או קרוב אליה)
     ) {
-      clearInterval(gameInterval);
-      gameOverScreen.style.display = 'flex';
+      clearInterval(gameInterval); // עצור את המשחק
+      gameOverScreen.style.display = 'flex'; // הצג מסך סיום
       finalScoreDisplay.textContent = 'הציון שלך: ' + score;
       
-      saveHighScore(score); 
-      highScoreOnGameOver.textContent = 'הציון הגבוה שלך: ' + personalHighScore;
+      saveHighScore(score); // נסה לשמור את הציון הגבוה
+      // עדכן את הציון הגבוה במסך הסיום (personalHighScore יתעדכן ב-saveHighScore)
+      highScoreOnGameOver.textContent = 'הציון הגבוה שלך: ' + personalHighScore; 
     }
 
+    // איפוס קקטוס והעלאת ציון
     if (cactusLeft < -20) {
-      cactusLeft = 600;
+      cactusLeft = 600; // החזר את הקקטוס לצד ימין
       score++;
       currentScoreEl.textContent = 'ציון נוכחי: ' + score;
 
-      if (score % 5 === 0) {
+      if (score % 5 === 0) { // הגבר מהירות כל 5 נקודות
         cactusSpeed += 0.5;
       }
     }
-  }, 20);
+  }, 20); // 20 מילישניות = 50 פריימים לשנייה
 }
 
 // 4. פונקציית התנתקות
@@ -151,14 +162,14 @@ async function saveHighScore(currentScore) {
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 personalHighScore = currentScore;
-                highScoreDisplay.textContent = 'ציון גבוה אישי: ' + personalHighScore;
+                if (highScoreDisplay) highScoreDisplay.textContent = 'ציון גבוה אישי: ' + personalHighScore;
                 console.log(`ציון גבוה חדש של ${currentScore} נשמר בהצלחה למשתמש ${user.displayName || user.email}.`);
             } else {
                 console.log(`הציון הנוכחי (${currentScore}) אינו גבוה יותר מהציון הקיים (${existingHighScore}).`);
             }
         } catch (error) {
             console.error("שגיאה בשמירת הציון הגבוה:", error.message);
-            alert("שגיאה בשמירת הציון הגבוה: " + error.message);
+            // מומלץ לא להציג אלרט למשתמש על שגיאות כאלה אלא אם הן קריטיות, רק ב-console
         }
     } else {
         console.log("לא מחובר. הציון הגבוה לא נשמר.");
@@ -174,18 +185,18 @@ async function fetchAndDisplayHighScore() {
             const doc = await userRef.get();
             if (doc.exists) {
                 personalHighScore = doc.data().score || 0;
-                highScoreDisplay.textContent = 'ציון גבוה אישי: ' + personalHighScore;
+                if (highScoreDisplay) highScoreDisplay.textContent = 'ציון גבוה אישי: ' + personalHighScore;
             } else {
                 personalHighScore = 0;
-                highScoreDisplay.textContent = 'ציון גבוה אישי: 0';
+                if (highScoreDisplay) highScoreDisplay.textContent = 'ציון גבוה אישי: 0';
             }
         } catch (error) {
             console.error("שגיאה בקריאת הציון הגבוה:", error.message);
-            highScoreDisplay.textContent = 'ציון גבוה אישי: --';
+            if (highScoreDisplay) highScoreDisplay.textContent = 'ציון גבוה אישי: --';
         }
     } else {
         personalHighScore = 0;
-        highScoreDisplay.textContent = 'ציון גבוה אישי: --';
+        if (highScoreDisplay) highScoreDisplay.textContent = 'ציון גבוה אישי: --';
     }
 }
 
@@ -202,6 +213,7 @@ async function signUpWithEmailPassword() {
     try {
         await auth.createUserWithEmailAndPassword(email, password);
         alert("ההרשמה בוצעה בהצלחה! התחברת כעת.");
+        // onAuthStateChanged יטפל בעדכון ה-UI לאחר ההרשמה והכניסה
     } catch (error) {
         console.error("שגיאה בהרשמה:", error.code, error.message);
         let errorMessage = "שגיאה בהרשמה.";
@@ -229,6 +241,7 @@ async function signInWithEmailPassword() {
     try {
         await auth.signInWithEmailAndPassword(email, password);
         alert("התחברת בהצלחה!");
+        // onAuthStateChanged יטפל בעדכון ה-UI לאחר הכניסה
     } catch (error) {
         console.error("שגיאה בהתחברות:", error.code, error.message);
         let errorMessage = "שגיאה בהתחברות.";
@@ -243,25 +256,23 @@ async function signInWithEmailPassword() {
 
 // 9. פונקציה לניהול תצוגת טפסי האימות
 function toggleAuthForms(showEmailForm) {
-    // בודקים אם האלמנטים קיימים לפני שמנסים לגשת אליהם
-    if (authButtonsDiv) {
+    if (authButtonsDiv) { // ודא שהאלמנט קיים
         authButtonsDiv.style.display = showEmailForm ? 'none' : 'block';
     }
-    if (emailAuthSection) {
+    if (emailAuthSection) { // ודא שהאלמנט קיים
         emailAuthSection.style.display = showEmailForm ? 'block' : 'none';
     }
 }
 
-// 10. האזנה לשינויים במצב ההתחברות
+// 10. האזנה לשינויים במצב ההתחברות (auth.onAuthStateChanged)
 auth.onAuthStateChanged(user => {
     if (user) {
         // המשתמש מחובר
         userDisplay.textContent = `מחובר כ: ${user.displayName || user.email}`;
-        // ודא שהאלמנטים קיימים לפני הסתרה/הצגה
         if (authButtonsDiv) authButtonsDiv.style.display = 'none';
         if (emailAuthSection) emailAuthSection.style.display = 'none';
         if (signOutBtn) signOutBtn.style.display = 'inline-block';
-        fetchAndDisplayHighScore();
+        fetchAndDisplayHighScore(); // טען והצג את הציון הגבוה שלו
     } else {
         // המשתמש לא מחובר
         userDisplay.textContent = "לא מחובר";
@@ -270,31 +281,44 @@ auth.onAuthStateChanged(user => {
         // הצג את כפתורי הכניסה הכלליים כברירת מחדל
         toggleAuthForms(false); 
         
-        highScoreDisplay.textContent = 'ציון גבוה אישי: --';
-        personalHighScore = 0;
+        if (highScoreDisplay) highScoreDisplay.textContent = 'ציון גבוה אישי: --';
+        personalHighScore = 0; // אפס ציון אישי כשלא מחובר
     }
 });
 
 // 11. הגדרת מאזיני אירועים לכפתורים ולמקשים
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' || e.code === 'ArrowUp') {
-    if (gameOverScreen.style.display === 'none') {
+    // ודא שמסך הסיום מוסתר לפני הקפיצה
+    if (gameOverScreen && gameOverScreen.style.display === 'none') {
       jump();
     }
   }
 });
 
-restartBtn.addEventListener('click', () => {
-  startGame();
-});
+if (restartBtn) { // ודא שהאלמנט קיים לפני הוספת מאזין
+    restartBtn.addEventListener('click', () => {
+      startGame();
+    });
+}
 
-signOutBtn.addEventListener('click', signOutUser);
+if (signOutBtn) { // ודא שהאלמנט קיים לפני הוספת מאזין
+    signOutBtn.addEventListener('click', signOutUser);
+}
 
-// מאזינים חדשים לכפתורי המייל/סיסמה
-showEmailSigninBtn.addEventListener('click', () => toggleAuthForms(true));
-emailSignInBtn.addEventListener('click', signInWithEmailPassword);
-emailSignUpBtn.addEventListener('click', signUpWithEmailPassword);
-toggleAuthModeBtn.addEventListener('click', () => toggleAuthForms(false));
+if (showEmailSigninBtn) {
+    showEmailSigninBtn.addEventListener('click', () => toggleAuthForms(true));
+}
+if (emailSignInBtn) {
+    emailSignInBtn.addEventListener('click', signInWithEmailPassword);
+}
+if (emailSignUpBtn) {
+    emailSignUpBtn.addEventListener('click', signUpWithEmailPassword);
+}
+if (toggleAuthModeBtn) {
+    toggleAuthModeBtn.addEventListener('click', () => toggleAuthForms(false));
+}
 
-// התחל את המשחק באופן אוטומטי בטעינת הדף (רק אם הוא לא במצב Game Over)
+
+// התחל את המשחק באופן אוטומטי בטעינת הדף
 startGame();
