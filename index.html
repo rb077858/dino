@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      background-color: #f7f7f7;
+      background-color: #f7f7f7; /* רקע כללי בהיר */
       overflow: hidden;
       font-family: Arial, sans-serif;
       direction: rtl; /* כיוון מימין לשמאל */
@@ -17,9 +17,10 @@
       position: relative;
       width: 600px;
       height: 150px;
-      background-color: #fff;
+      /* שינוי: צבע רקע אפור בהיר */
+      background-color: #e0e0e0; /* צבע חדש לרקע המשחק */
       border: 2px solid #333;
-      margin: 50px auto 20px auto; /* הוסף מרווח תחתון */
+      margin: 50px auto 20px auto;
       overflow: hidden;
     }
     #dino {
@@ -28,7 +29,8 @@
       left: 50px;
       width: 40px;
       height: 40px;
-      background-color: #555;
+      /* שינוי: צבע כחול כהה */
+      background-color: #007bff; /* צבע חדש לדינו (כחול בולט) */
       border-radius: 8px;
     }
     #cactus {
@@ -36,11 +38,13 @@
       bottom: 0;
       width: 20px;
       height: 40px;
-      background-color: #228B22;
+      /* שינוי: צבע ירוק כהה */
+      background-color: #28a745; /* צבע חדש לקקטוס (ירוק בולט) */
       border-radius: 4px;
       right: -20px;
     }
-    .score-container { /* עטיפה לציונים */
+    /* שאר ה-CSS נשאר ללא שינוי */
+    .score-container { 
       text-align: center;
       font-size: 24px;
       margin-top: 20px;
@@ -73,7 +77,7 @@
       flex-direction: column;
       text-align: center;
     }
-    #gameOver button, .auth-section button { /* עדכון לסלקטור הכפתורים */
+    #gameOver button, .auth-section button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 18px;
@@ -90,7 +94,7 @@
       background-color: #0056b3;
     }
     #signout-btn {
-      background-color: #6c757d; /* צבע כפתור התנתקות */
+      background-color: #6c757d;
       color: white;
     }
     #signout-btn:hover {
@@ -112,7 +116,7 @@
         margin: 20px auto;
         max-width: 400px;
         text-align: center;
-        display: none; /* נסתר כברירת מחדל */
+        display: none;
     }
     .auth-section input {
         width: calc(100% - 20px);
@@ -120,7 +124,7 @@
         margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        text-align: right; /* יישור טקסט בתוך שדות קלט לימין */
+        text-align: right;
     }
     .auth-section button {
         width: 100%;
@@ -154,43 +158,43 @@
   </style>
 </head>
 <body>
-    <div id="user-status">
-    <p id="user-display">לא מחובר</p>
-    <div id="auth-buttons">
-      <button id="show-email-signin-btn">התחבר / הירשם עם מייל וסיסמה</button>
-      <button id="signout-btn" style="display:none;">התנתק</button>
-    </div>
-  </div>
+    <div id="user-status">
+        <p id="user-display">לא מחובר</p>
+        <div id="auth-buttons">
+            <button id="show-email-signin-btn">התחבר / הירשם עם מייל וסיסמה</button>
+            <button id="signout-btn" style="display:none;">התנתק</button>
+        </div>
+    </div>
 
-  <div id="email-auth-section" class="auth-section">
-      <h3>התחבר / הירשם</h3>
-      <input type="email" id="email-input" placeholder="מייל" required>
-      <input type="password" id="password-input" placeholder="סיסמה" required>
-      <button id="email-signin-btn">התחבר</button>
-      <button id="email-signup-btn">הירשם</button>
-      <button id="toggle-auth-mode">חזור למצב כפתורי התחברות</button>
-  </div>
+    <div id="email-auth-section" class="auth-section">
+        <h3>התחבר / הירשם</h3>
+        <input type="email" id="email-input" placeholder="מייל" required>
+        <input type="password" id="password-input" placeholder="סיסמה" required>
+        <button id="email-signin-btn">התחבר</button>
+        <button id="email-signup-btn">הירשם</button>
+        <button id="toggle-auth-mode">חזור למצב כפתורי התחברות</button>
+    </div>
 
-  <div id="game">
-    <div id="dino"></div>
-    <div id="cactus"></div>
-    <div id="gameOver">
-      <div>המשחק נגמר!</div>
-      <p id="final-score-display">הציון שלך: 0</p>
-      <p id="high-score-on-gameover">הציון הגבוה שלך: --</p>
-      <button id="restartBtn">התחל מחדש</button>
-    </div>
-  </div>
+    <div id="game">
+        <div id="dino"></div>
+        <div id="cactus"></div>
+        <div id="gameOver">
+            <div>המשחק נגמר!</div>
+            <p id="final-score-display">הציון שלך: 0</p>
+            <p id="high-score-on-gameover">הציון הגבוה שלך: --</p>
+            <button id="restartBtn">התחל מחדש</button>
+        </div>
+    </div>
 
-  <div class="score-container">
-    <p id="current-score">ציון נוכחי: 0</p>
-    <p id="high-score-display">ציון גבוה אישי: --</p>
-  </div>
+    <div class="score-container">
+        <p id="current-score">ציון נוכחי: 0</p>
+        <p id="high-score-display">ציון גבוה אישי: --</p>
+    </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 
-    <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
